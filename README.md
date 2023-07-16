@@ -61,4 +61,9 @@ executing: |kubectl -l name=host get pod|
 NAME                    READY   STATUS    RESTARTS        AGE
 host-86c774dbc8-h582f   1/1     Running   3 (2d22h ago)   3d22h
 
+> k gd
+executing: |kubectl get deployment|
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+host   1/1     1            1           3d23h
+
 ```
