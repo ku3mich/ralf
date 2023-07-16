@@ -1,4 +1,4 @@
-## RALF - Recursive ALF
+# RALF - Recursive ALF
 
 A small try to extend [ALF](https://github.com/DannyBen/alf)
 
@@ -30,21 +30,27 @@ alf save 1>/dev/null
 
 -   `RALF_VERBOSE_ALIAS_EXEC` when set to not empty output to `STDERR` a final command
 -   `RALF_SHALL_EXEC` when set to not empty allows `ralf` to execute a final command
+-   `RALF_DEBUG` outputs some debug info to `STDERR`
 
 ## Examples
 
 ```
 
-k g p
+> k g p
 executing: |kubectl get pod|
 
-k sys g d
+# sys adds '-n kube-system'
+> k sys g d
 executing: |kubectl -n kube-system get deployment|
 
-k sys g s
+> k sys g s
 executing: |kubectl -n kube-system get service|
 
-k ln NAME g p
-executing: |kubectl -label=name=NAME get pod|
+# ln adds '-l name='
+> k ln NAME g p
+executing: |kubectl -l name=NAME get pod|
+
+> k sys ln NAME g p
+executing: |kubectl -n kube-system -l name=NAME get pod|
 
 ```
