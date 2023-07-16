@@ -28,8 +28,8 @@ alf save 1>/dev/null
 
 ## Settings
 
-`RALF_VERBOSE_ALIAS_EXEC` when set to not empty output to `STDERR` a final command
-`RALF_SHALL_EXEC` when set to not empty allows `ralf` to execute a final command
+-   `RALF_VERBOSE_ALIAS_EXEC` when set to not empty output to `STDERR` a final command
+-   `RALF_SHALL_EXEC` when set to not empty allows `ralf` to execute a final command
 
 ## Examples
 
