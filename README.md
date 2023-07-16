@@ -44,4 +44,7 @@ executing: |kubectl -n kube-system get deployment|
 k sys g s
 executing: |kubectl -n kube-system get service|
 
+k ln NAME g p
+executing: |kubectl -label=name=NAME get pod|
+
 ```

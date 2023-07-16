@@ -2,8 +2,11 @@
 
 export RALF_VERBOSE_ALIAS_EXEC=1
 export RALF_SHALL_EXEC=1
+export RALF_DEBUG=
 
 __pass(){
+  [[ ! -z $RALF_DEBUG ]] && >&2 printf "  pass: |%s|\n" "$*"
+
   local i k args=($*)
   for i in $(seq 0 $(( ${#args[@]} - 1 ))); do
     k=${args[$i]}
@@ -24,8 +27,21 @@ function __join_by {
 }
 
 __strip() {
+    [[ ! -z $RALF_DEBUG ]] && >&2 printf "  strip: |%s|\n" "$*"
+
     local s=( $( $(__join_by ' ' $@) ) )
+    [[ ! -z $RALF_DEBUG ]] && >&2 printf " strip result: %s\n" "${s[@]:1}"
     printf "%s\n" "${s[@]:1}"
+}
+
+__concat() {
+    [[ ! -z $RALF_DEBUG ]] && >&2 printf "  concat: |%s|\n" "$*"
+    local args=( $@ )
+
+    printf "%s%s\n" "$1" "$3"
+    local s=( $2 "${args[@]:3}" )
+    [[ ! -z $RALF_DEBUG ]] &&  >&2 printf "  %s\n" ${s[@]}
+    __pass ${s[@]}
 }
 
 __execute() {
@@ -33,6 +49,6 @@ __execute() {
   printf -v t "%s " $a
   e="${t::-1}"
 
-  [[ ! -z VERBOSE_ALIAS_EXEC ]] && >&2 printf "executing: |%s|\n" "$e"
-  [[ ! -z RALF_SHALL_EXEC ]] && eval "$e"
+  [[ ! -z $RALF_VERBOSE_ALIAS_EXEC ]] && >&2 printf "executing: |%s|\n" "$e"
+  [[ ! -z $RALF_SHALL_EXEC ]] && eval "$e"
 }
