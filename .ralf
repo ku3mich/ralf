@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+export RALF_VERBOSE_ALIAS_EXEC=1
+export RALF_SHALL_EXEC=1
+
+__pass(){
+  local i k args=($*)
+  for i in $(seq 0 $(( ${#args[@]} - 1 ))); do
+    k=${args[$i]}
+    if [[ $k == o--* ]]; then
+      printf "%s\n" $( ${args[@]:$i} )
+      break
+    fi
+
+    printf "%s\n" "$k"
+  done
+}
+
+function __join_by {
+  local d=${1-} f=${2-}
+  if shift 2; then
+    printf %s "$f" "${@/#/$d}"
+  fi
+}
+
+__strip() {
+    local s=( $( $(__join_by ' ' $@) ) )
+    printf "%s\n" "${s[@]:1}"
+}
+
+__execute() {
+  local e t a=$( $(__join_by ' ' $@) )
+  printf -v t "%s " $a
+  e="${t::-1}"
+
+  [[ ! -z VERBOSE_ALIAS_EXEC ]] && >&2 printf "executing: |%s|\n" "$e"
+  [[ ! -z RALF_SHALL_EXEC ]] && $($e)
+}
