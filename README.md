@@ -53,4 +53,9 @@ executing: |kubectl -l name=NAME get pod|
 > k sys ln NAME g p
 executing: |kubectl -n kube-system -l name=NAME get pod|
 
+> k ln host g p
+executing: |kubectl -l name=host get pod|
+NAME                    READY   STATUS    RESTARTS        AGE
+host-86c774dbc8-h582f   1/1     Running   3 (2d22h ago)   3d22h
+
 ```
