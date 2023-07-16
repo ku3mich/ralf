@@ -34,5 +34,5 @@ __execute() {
   e="${t::-1}"
 
   [[ ! -z VERBOSE_ALIAS_EXEC ]] && >&2 printf "executing: |%s|\n" "$e"
-  [[ ! -z RALF_SHALL_EXEC ]] && $($e)
+  [[ ! -z RALF_SHALL_EXEC ]] && eval "$e"
 }
