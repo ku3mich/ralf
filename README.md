@@ -53,6 +53,9 @@ executing: |kubectl -l name=NAME get pod|
 > k sys ln NAME g p
 executing: |kubectl -n kube-system -l name=NAME get pod|
 
+> k ln NAME gd
+executing: |kubectl -l name=NAME get deployment|
+
 > k ln host g p
 executing: |kubectl -l name=host get pod|
 NAME                    READY   STATUS    RESTARTS        AGE
