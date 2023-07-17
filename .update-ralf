@@ -1,0 +1,9 @@
+p=$(pwd)
+cd $HOME
+
+. ./.profile
+alf save 1>/dev/null
+. ./.bash_aliases
+
+cd $p
+

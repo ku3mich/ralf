@@ -11,7 +11,7 @@ files:
 
 -   install [ALF](https://github.com/DannyBen/alf)
 -   put your(or sample `alf.conf`) into your `$HOME`
--   put `.ralf` into your `$HOME`
+-   put `.ralf` anf `.update-ralf` (optionally)into your `$HOME`
 -   add to `.profile`
 
 ```
@@ -24,6 +24,12 @@ files:
 . .profile
 alf save 1>/dev/null
 . .bash_aliases
+```
+
+or
+
+```
+. ~/.update-ralf
 ```
 
 ## Settings
