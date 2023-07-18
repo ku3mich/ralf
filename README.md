@@ -4,44 +4,49 @@ A small try to extend [ALF](https://github.com/DannyBen/alf)
 
 files:
 
--   `alf.conf` contains a small example of usage more advanced aliasing for kubectl
--   `.ralf` helper functions
+-   `.ralf.lib` contains alias snippets for a bunch of commands(kubectl, udocker for now)
+-   `.ralf` helper functions, should be included into your `.profile` or `.bashrc`
+- if your already use [ALF](https://github.com/DannyBen/alf) save your `alf.conf`, it will be overriten by `__update-ralf`
 
 ## Install
 
 -   install [ALF](https://github.com/DannyBen/alf)
--   put your(or sample `alf.conf`) into your `$HOME`
--   put `.ralf` anf `.update-ralf` (optionally)into your `$HOME`
--   add to `.profile`
+-   put links to `.conf` files into `~/.ralf.d` folder, e.g.
+```
+ln -s .ralf.lib/kubctl.conf .ralf.d/kubectl.conf
+```
+-   put `.ralf` into your `$HOME`
+-   add to `.profile` (or `.bashrc`)
 
 ```
 . $HOME/.ralf
 ```
 
--   run
-
-```
-. .profile
-alf save 1>/dev/null
-. .bash_aliases
-```
-
-or
-
-```
-. ~/.update-ralf
-```
+-   execute `__update-ralf`
 
 ## Settings
 
--   `RALF_VERBOSE_ALIAS_EXEC` when set to not empty output to `STDERR` a final command
--   `RALF_SHALL_EXEC` when set to not empty allows `ralf` to execute a final command
--   `RALF_DEBUG` outputs some debug info to `STDERR`
+-   `RALF_VERBOSE_ALIAS_EXEC` when set to non-empty output to `STDERR` a final command
+- `RALF_SHALL_EXEC` when set to non-empty allows `ralf` to execute a final command
+  `RALF_DEBUG` outputs some debug info to `STDERR`
+- `RALF_VERSION` version of the script
 
 ## Examples
 
+
+### udocker
+
+```
+> u cre container image
+executing: |udocker create --name=container image|
+
+> u pl image
+executing: |udocker pull image|
 ```
 
+### kubectl
+
+```
 > k g p
 executing: |kubectl get pod|
 

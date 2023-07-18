@@ -1,54 +1,86 @@
 #!/usr/bin/env bash
 
 export RALF_VERBOSE_ALIAS_EXEC=1
-export RALF_SHALL_EXEC=1
+export RALF_SHALL_EXEC=
 export RALF_DEBUG=
+export RALF_VERSION=1.0
 
-__pass(){
-  [[ ! -z $RALF_DEBUG ]] && >&2 printf "  pass: |%s|\n" "$*"
+__pass() {
+    [[ ! -z $RALF_DEBUG ]] && printf >&2 "  pass: |%s|\n" "$*"
 
-  local i k args=($*)
-  for i in $(seq 0 $(( ${#args[@]} - 1 ))); do
-    k=${args[$i]}
-    if [[ $k == o--* ]]; then
-      printf "%s\n" $( ${args[@]:$i} )
-      break
-    fi
+    local i k args=($*)
+    for i in $(seq 0 $((${#args[@]} - 1))); do
+        k=${args[$i]}
+        if [[ $k == o--* ]]; then
+            printf "%s\n" $(${args[@]:$i})
+            break
+        fi
 
-    printf "%s\n" "$k"
-  done
+        printf "%s\n" "$k"
+    done
 }
 
 function __join_by {
-  local d=${1-} f=${2-}
-  if shift 2; then
-    printf %s "$f" "${@/#/$d}"
-  fi
+    local d=${1-} f=${2-}
+    if shift 2; then
+        printf %s "$f" "${@/#/$d}"
+    fi
 }
 
 __strip() {
-    [[ ! -z $RALF_DEBUG ]] && >&2 printf "  strip: |%s|\n" "$*"
+    [[ ! -z $RALF_DEBUG ]] && printf >&2 "  strip: |%s|\n" "$*"
 
-    local s=( $( $(__join_by ' ' $@) ) )
-    [[ ! -z $RALF_DEBUG ]] && >&2 printf " strip result: %s\n" "${s[@]:1}"
+    local s=($($(__join_by ' ' $@)))
+    [[ ! -z $RALF_DEBUG ]] && printf >&2 " strip result: %s\n" "${s[@]:1}"
     printf "%s\n" "${s[@]:1}"
 }
 
 __concat() {
-    [[ ! -z $RALF_DEBUG ]] && >&2 printf "  concat: |%s|\n" "$*"
-    local args=( $@ )
+    [[ ! -z $RALF_DEBUG ]] && printf >&2 "  concat: |#%s|%s|\n" "$#" "$*"
+    local args=($@)
 
-    printf "%s%s\n" "$1" "$3"
-    local s=( $2 "${args[@]:3}" )
-    [[ ! -z $RALF_DEBUG ]] &&  >&2 printf "  %s\n" ${s[@]}
-    __pass ${s[@]}
+    if [[ $2 != o--* ]]; then
+        printf "%s%s\n" "$1" "$2"
+        __pass ${args[@]:2}
+    else
+        printf "%s%s\n" "$1" "$3"
+        local s=($2 "${args[@]:3}")
+        [[ ! -z $RALF_DEBUG ]] && printf >&2 "  %s\n" ${s[@]}
+        __pass ${s[@]}
+    fi
 }
 
 __execute() {
-  local e t a=$( $(__join_by ' ' $@) )
-  printf -v t "%s " $a
-  e="${t::-1}"
+    local e t a=$($(__join_by ' ' $@))
+    printf -v t "%s " $a
+    e="${t::-1}"
 
-  [[ ! -z $RALF_VERBOSE_ALIAS_EXEC ]] && >&2 printf "executing: |%s|\n" "$e"
-  [[ ! -z $RALF_SHALL_EXEC ]] && eval "$e"
+    [[ ! -z $RALF_VERBOSE_ALIAS_EXEC ]] && printf >&2 "executing: |%s|\n" "$e"
+    [[ ! -z $RALF_SHALL_EXEC ]] && eval "$e"
 }
+
+__update-ralf() {
+    p=$(pwd)
+    {
+        cd $HOME
+
+        . ./.ralf
+        if [[ -d .ralf.d ]]; then
+            rm ./alf.conf
+            local f
+
+            for f in $( ls .ralf.d/* ); do
+                cat "$f" >> alf.conf
+                printf "\n" >> alf.conf
+            done
+
+            alf save 1>/dev/null
+            . ./.bash_aliases
+        else
+            >&2 printf "%s\n" "WARN: no .ralf.d found in $HOME"
+        fi
+    }
+    cd $p
+}
+
+export -f __update-ralf
